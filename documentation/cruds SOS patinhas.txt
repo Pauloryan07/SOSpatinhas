@@ -1,0 +1,68 @@
+cruds SOS patinhas
+- usuários
+- posts
+  - fotos
+  - textos
+  - comentários
+- doação e adoção de pets
+- alertas de pets perdidos
+- denúncias
+
+
+banco de dados
+- usuários (user)
+  - nome
+  - email
+  - senha
+
+- pets
+  - id
+  - nome
+  - espécie
+  - raça
+  - idade
+  - sexo
+  - foto
+  - dono(fk)
+
+- posts (posts)
+  - foto
+  - texto
+  - data de publicação
+  - user(fk)
+
+- anúncio de adoção (pet donation)
+  - foto
+  - nome
+  - descrição
+  - idade
+  - sexo
+  - doença(histórico de doenças ou doença crônica)
+  - vacina
+  - temperamento(dócil ou agressivo)
+  - dono(user(fk))
+
+- alertas (lost pet)
+  - foto
+  - nome
+  - característica marcante
+  - sexo 
+  - onde foi visto pela ultima vez 
+  - dono(user(fk))
+
+- denuncia (denunciation)
+  - tipo: abandono, maus-tratos, negligencia, ferido
+  - local
+  - descrição
+  - evidencia(foto)
+  - Características do animal
+  - denunciante (user(fk))
+
+
+
+
+
+
+
+
+
