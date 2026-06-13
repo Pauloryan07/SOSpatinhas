@@ -1,96 +1,42 @@
 <?php
-
 namespace App\Http\Controllers;
-
-use App\Models\User;
+use App\Http\Requests\User\UpdateProfileRequest;
+use App\Http\Requests\User\UpdatePasswordRequest;
+use App\Http\Requests\User\DeleteAccountRequest;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Validation\ValidationException;
-
 class UserController extends Controller
 {
-    public function register(Request $request)
+    public function profile(Request $request): JsonResponse
     {
-        $request->validate([
-            'name'     => 'required|string|max:255',
-            'email'    => 'required|email|unique:users,email',
-            'password' => 'required|string|min:8|confirmed',
-            'telefone' => 'required|string|max:20',
-        ]);
-
-        $user = User::create([
-            'name'     => $request->name,
-            'email'    => $request->email,
-            'password' => Hash::make($request->password),
-            'telefone' => $request->telefone,
-        ]);
-
-        $token = $user->createToken('auth_token')->plainTextToken;
-
-        return response()->json([
-            'user'  => $user,
-            'token' => $token,
-        ], 201);
+        return response()->json($request->user()->only('id', 'name', 'email', 'telefone'));
     }
 
-    public function registerVet(Request $request)
+    public function updateProfile(UpdateProfileRequest $request): JsonResponse
     {
-        $request->validate([
-            'name'     => 'required|string|max:255',
-            'email'    => 'required|email|unique:users,email',
-            'password' => 'required|string|min:8|confirmed',
-            'telefone' => 'required|string|max:20',
-            'crmv'     => 'required|string|unique:users,crmv',
-        ]);
-
-        $user = User::create([
-            'name'     => $request->name,
-            'email'    => $request->email,
-            'password' => Hash::make($request->password),
-            'telefone' => $request->telefone,
-            'crmv'     => $request->crmv,
-        ]);
-
-        $token = $user->createToken('auth_token')->plainTextToken;
-
-        return response()->json([
-            'user'  => $user,
-            'token' => $token,
-        ], 201);
+        $request->user()->update($request->validated());
+        return response()->json($request->user()->fresh()->only('id', 'name', 'email', 'telefone'));
     }
 
-    public function login(Request $request)
+    public function updatePassword(UpdatePasswordRequest $request): JsonResponse
     {
-        $request->validate([
-            'email'    => 'required|email',
-            'password' => 'required|string',
-        ]);
-
-        if (!Auth::attempt($request->only('email', 'password'))) {
-            throw ValidationException::withMessages([
-                'email' => ['Credenciais inválidas.'],
-            ]);
+        $user = $request->user();
+        if (!Hash::check($request->current_password, $user->password)) {
+            return response()->json(['message' => 'Senha atual incorreta.'], 422);
         }
-
-        $user  = Auth::user();
-        $token = $user->createToken('auth_token')->plainTextToken;
-
-        return response()->json([
-            'user'  => $user,
-            'token' => $token,
-        ]);
+        $user->update(['password' => Hash::make($request->password)]);
+        return response()->json(['message' => 'Senha atualizada com sucesso.']);
     }
 
-    public function logout(Request $request)
+    public function destroy(DeleteAccountRequest $request): JsonResponse
     {
-        $request->user()->currentAccessToken()->delete();
-
-        return response()->json(['message' => 'Logout realizado com sucesso.']);
-    }
-
-    public function me(Request $request)
-    {
-        return response()->json($request->user());
+        $user = $request->user();
+        if (!Hash::check($request->password, $user->password)) {
+            return response()->json(['message' => 'Senha incorreta.'], 403);
+        }
+        $user->tokens()->delete();
+        $user->delete();
+        return response()->json(['message' => 'Conta excluída com sucesso.']);
     }
 }

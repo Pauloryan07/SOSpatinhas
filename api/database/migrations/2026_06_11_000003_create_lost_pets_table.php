@@ -6,25 +6,23 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
     public function up(): void
     {
-        Schema::create('posts', function (Blueprint $table) {
+        Schema::create('lost_pets', function (Blueprint $table) {
             $table->id();
-            $table->text('text');
+            $table->string('name');
             $table->string('photo')->nullable();
+            $table->text('distinctive_features');
+            $table->enum('sex', ['male', 'female']);
+            $table->string('last_seen_location');
+            $table->boolean('found')->default(false);
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->timestamps();
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
-        Schema::dropIfExists('posts');
+        Schema::dropIfExists('lost_pets');
     }
 };

@@ -6,25 +6,22 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
     public function up(): void
     {
-        Schema::create('posts', function (Blueprint $table) {
+        Schema::create('denunciations', function (Blueprint $table) {
             $table->id();
-            $table->text('text');
-            $table->string('photo')->nullable();
+            $table->enum('type', ['abandonment', 'mistreatment', 'negligence', 'injured']);
+            $table->string('location');
+            $table->text('description');
+            $table->string('evidence_photo')->nullable();
+            $table->text('animal_characteristics')->nullable();
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->timestamps();
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
-        Schema::dropIfExists('posts');
+        Schema::dropIfExists('denunciations');
     }
 };

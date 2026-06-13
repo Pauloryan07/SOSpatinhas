@@ -2,63 +2,61 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Denunciation;
+use App\Http\Requests\StoreDenunciationRequest;
+use App\Http\Requests\UpdateDenunciationRequest;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 class DenunciationController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
+    public function index(): JsonResponse
     {
-        //
+        $denunciations = Denunciation::with('user:id,name')
+            ->latest()
+            ->paginate(15);
+        return response()->json($denunciations);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
+    public function store(StoreDenunciationRequest $request): JsonResponse
     {
-        //
+        $validated = $request->validated();
+
+        if ($request->hasFile('evidence_photo')) {
+            $validated['evidence_photo'] = $request->file('evidence_photo')->store('denunciations', 'public');
+        }
+
+        $denunciation = $request->user()->denunciations()->create($validated);
+
+        return response()->json($denunciation, 201);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
+    public function show(Denunciation $denunciation): JsonResponse
     {
-        //
+        return response()->json($denunciation->load('user:id,name'));
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
+    public function update(UpdateDenunciationRequest $request, Denunciation $denunciation): JsonResponse
     {
-        //
+        $validated = $request->validated();
+
+        if ($request->hasFile('evidence_photo')) {
+            $validated['evidence_photo'] = $request->file('evidence_photo')->store('denunciations', 'public');
+        }
+
+        $denunciation->update($validated);
+
+        return response()->json($denunciation);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
+    public function destroy(Request $request, Denunciation $denunciation): JsonResponse
     {
-        //
-    }
+        if ($denunciation->user_id !== $request->user()->id) {
+            return response()->json(['message' => 'Forbidden'], 403);
+        }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        //
-    }
+        $denunciation->delete();
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
+        return response()->json(['message' => 'Denunciation deleted']);
     }
 }
