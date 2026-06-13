@@ -1,9 +1,12 @@
 import { StyleSheet, Text, View } from "react-native";
 import MenuButtom from "../components/menu-botton";
+import MenuTop from "../components/menu-top";
 
 export default function HomeScreen() {
   return (
     <View style={styles.container}>
+      <MenuTop />
+      
       <Text style={styles.title}>HomeScreen</Text>
       <MenuButtom />
     </View>
