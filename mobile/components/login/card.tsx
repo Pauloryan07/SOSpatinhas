@@ -1,3 +1,4 @@
+import { useRouter } from "expo-router";
 import {
   StyleSheet,
   Text,
@@ -7,6 +8,8 @@ import {
 } from "react-native";
 
 export default function Card() {
+  const router = useRouter();
+
   return (
     <View style={styles.card}>
       <Text style={styles.title}>Bem-vindo de volta</Text>
@@ -28,7 +31,10 @@ export default function Card() {
         secureTextEntry
       />
 
-      <TouchableOpacity style={styles.button}>
+      <TouchableOpacity
+        style={styles.button}
+        onPress={() => router.push("/home")}
+      >
         <Text style={styles.buttonText}>Entrar</Text>
       </TouchableOpacity>
 
