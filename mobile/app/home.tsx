@@ -1,4 +1,5 @@
 import { StyleSheet, Text, View } from "react-native";
+import BotaoDenuncia from "../components/botao-denuncia";
 import MenuButtom from "../components/menu-botton";
 import MenuTop from "../components/menu-top";
 
@@ -6,8 +7,8 @@ export default function HomeScreen() {
   return (
     <View style={styles.container}>
       <MenuTop />
-      
       <Text style={styles.title}>HomeScreen</Text>
+      <BotaoDenuncia />
       <MenuButtom />
     </View>
   );
