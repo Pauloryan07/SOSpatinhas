@@ -1,5 +1,6 @@
-import { Alert, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
 import { useState } from "react";
+import { Alert, KeyboardAvoidingView, Platform, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
+import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import { registerUser } from "../../services/auth";
 
@@ -9,6 +10,7 @@ export default function Card() {
   const [password, setPassword] = useState("");
   const [telefone, setTelefone] = useState("");
   const [loading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
   const router = useRouter();
 
   const handleRegister = async () => {
@@ -28,17 +30,26 @@ export default function Card() {
   };
 
   return (
-    <View style={styles.card}>
-      <Text style={styles.title}>Crie sua conta</Text>
-      <Text style={styles.subtitle}>Coloque suas informações abaixo</Text>
-      <TextInput style={styles.input} placeholder="Nome" placeholderTextColor="#666" autoCapitalize="none" value={name} onChangeText={setName} editable={!loading} />
-      <TextInput style={styles.input} placeholder="Email" placeholderTextColor="#666" keyboardType="email-address" autoCapitalize="none" value={email} onChangeText={setEmail} editable={!loading} />
-      <TextInput style={styles.input} placeholder="Senha" placeholderTextColor="#666" secureTextEntry value={password} onChangeText={setPassword} editable={!loading} />
-      <TextInput style={styles.input} placeholder="Telefone" placeholderTextColor="#666" keyboardType="phone-pad" value={telefone} onChangeText={setTelefone} editable={!loading} />
-      <TouchableOpacity style={[styles.button, loading && styles.buttonDisabled]} onPress={handleRegister} disabled={loading}>
-        <Text style={styles.buttonText}>{loading ? "Cadastrando..." : "Cadastrar"}</Text>
-      </TouchableOpacity>
-    </View>
+    <KeyboardAvoidingView style={{ flex: 1, width: "100%" }} behavior={Platform.OS === "ios" ? "padding" : undefined}>
+      <ScrollView contentContainerStyle={{ flexGrow: 1 }} keyboardShouldPersistTaps="handled">
+        <View style={styles.card}>
+          <Text style={styles.title}>Crie sua conta</Text>
+          <Text style={styles.subtitle}>Coloque suas informações abaixo</Text>
+          <TextInput style={styles.input} placeholder="Nome" placeholderTextColor="#666" autoCapitalize="none" value={name} onChangeText={setName} editable={!loading} />
+          <TextInput style={styles.input} placeholder="Email" placeholderTextColor="#666" keyboardType="email-address" autoCapitalize="none" value={email} onChangeText={setEmail} editable={!loading} />
+          <View style={styles.passwordContainer}>
+            <TextInput style={styles.passwordInput} placeholder="Senha" placeholderTextColor="#666" secureTextEntry={!showPassword} value={password} onChangeText={setPassword} editable={!loading} />
+            <TouchableOpacity onPress={() => setShowPassword(!showPassword)} style={styles.eyeButton}>
+              <Ionicons name={showPassword ? "eye-off" : "eye"} size={22} color="#666" />
+            </TouchableOpacity>
+          </View>
+          <TextInput style={styles.input} placeholder="Telefone" placeholderTextColor="#666" keyboardType="phone-pad" value={telefone} onChangeText={setTelefone} editable={!loading} />
+          <TouchableOpacity style={[styles.button, loading && styles.buttonDisabled]} onPress={handleRegister} disabled={loading}>
+            <Text style={styles.buttonText}>{loading ? "Cadastrando..." : "Cadastrar"}</Text>
+          </TouchableOpacity>
+        </View>
+      </ScrollView>
+    </KeyboardAvoidingView>
   );
 }
 
@@ -47,6 +58,9 @@ const styles = StyleSheet.create({
   title: { fontSize: 34, fontWeight: "700", textAlign: "center", color: "#000" },
   subtitle: { fontSize: 16, textAlign: "center", color: "#555", marginTop: 8, marginBottom: 30 },
   input: { height: 55, borderWidth: 1, borderColor: "#D9D9D9", borderRadius: 15, paddingHorizontal: 16, marginBottom: 15, backgroundColor: "#FFF" },
+  passwordContainer: { flexDirection: "row", alignItems: "center", borderWidth: 1, borderColor: "#D9D9D9", borderRadius: 15, marginBottom: 15, backgroundColor: "#FFF" },
+  passwordInput: { flex: 1, height: 55, paddingHorizontal: 16 },
+  eyeButton: { paddingHorizontal: 12 },
   button: { height: 55, backgroundColor: "#F54E50", borderRadius: 15, justifyContent: "center", alignItems: "center", marginTop: 10 },
   buttonDisabled: { backgroundColor: "#f8a5a6" },
   buttonText: { color: "#FFF", fontSize: 16, fontWeight: "600" },
