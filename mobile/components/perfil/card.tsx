@@ -1,19 +1,20 @@
 import { useRouter } from "expo-router";
 import {
-    ScrollView,
-    StyleSheet,
-    Text,
-    TouchableOpacity,
-    View
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
 } from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 export default function Card() {
   const router = useRouter();
+  const insets = useSafeAreaInsets();
 
   return (
     <View style={styles.card}>
       <ScrollView
-        style={styles.card}
         contentContainerStyle={styles.cardContent}
         showsVerticalScrollIndicator={false}
       >
@@ -44,11 +45,14 @@ export default function Card() {
           <Text style={styles.fieldLabel}>Senha</Text>
           <Text style={styles.fieldValue}>············</Text>
         </View>
+      </ScrollView>
 
+      {/* Footer fixo igual ao criar-post */}
+      <View style={[styles.footer, { paddingBottom: insets.bottom + 16 }]}>
         <TouchableOpacity style={styles.saveBtn}>
           <Text style={styles.saveBtnText}>Alterar</Text>
         </TouchableOpacity>
-      </ScrollView>
+      </View>
     </View>
   );
 }
@@ -62,7 +66,7 @@ const styles = StyleSheet.create({
   },
   cardContent: {
     padding: 24,
-    paddingBottom: 120,
+    paddingBottom: 20,
   },
   sectionTitle: {
     fontSize: 16,
@@ -87,10 +91,16 @@ const styles = StyleSheet.create({
     height: 1,
     backgroundColor: "#F3F4F6",
   },
+  footer: {
+    backgroundColor: "#FFFFFF",
+    paddingHorizontal: 20,
+    paddingTop: 12,
+    borderTopWidth: 1,
+    borderTopColor: "#f0f0f0",
+  },
   saveBtn: {
-    marginTop: 32,
     backgroundColor: "#F54E50",
-    borderRadius: 14,
+    borderRadius: 12,
     paddingVertical: 16,
     alignItems: "center",
   },
