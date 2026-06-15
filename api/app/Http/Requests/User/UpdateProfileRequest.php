@@ -9,6 +9,7 @@ class UpdateProfileRequest extends FormRequest
         return [
             'name'     => ['sometimes', 'string', 'max:255'],
             'telefone' => ['sometimes', 'string', 'max:20'],
+            'avatar'   => ['sometimes', 'nullable', 'image', 'max:2048'],
         ];
     }
 }

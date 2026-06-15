@@ -31,7 +31,7 @@ export default function Doacoes() {
 
       <View style={styles.buttons}>
   
-      <TouchableOpacity style={styles.button}>
+      <TouchableOpacity style={styles.button} onPress={() => router.push("/doacoes-pix")}>
         <Image
           source={require("@/assets/images/textura-dinheiro.png")}
           style={styles.buttonTexture}

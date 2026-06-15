@@ -10,13 +10,21 @@ class UserController extends Controller
 {
     public function profile(Request $request): JsonResponse
     {
-        return response()->json($request->user()->only('id', 'name', 'email', 'telefone'));
+        return response()->json($request->user()->only('id', 'name', 'email', 'telefone', 'avatar'));
     }
 
     public function updateProfile(UpdateProfileRequest $request): JsonResponse
     {
-        $request->user()->update($request->validated());
-        return response()->json($request->user()->fresh()->only('id', 'name', 'email', 'telefone'));
+        $user = $request->user();
+        $data = $request->validated();
+        
+        if ($request->hasFile('avatar')) {
+            $path = $request->file('avatar')->store('avatars', 'public');
+            $data['avatar'] = $path;
+        }
+        
+        $user->update($data);
+        return response()->json($user->fresh()->only('id', 'name', 'email', 'telefone', 'avatar'));
     }
 
     public function updatePassword(UpdatePasswordRequest $request): JsonResponse
