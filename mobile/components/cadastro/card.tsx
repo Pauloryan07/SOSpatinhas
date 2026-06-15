@@ -36,6 +36,7 @@ export default function Card() {
           <Text style={styles.title}>Crie sua conta</Text>
           <Text style={styles.subtitle}>Coloque suas informações abaixo</Text>
           <TextInput style={styles.input} placeholder="Nome" placeholderTextColor="#666" autoCapitalize="none" value={name} onChangeText={setName} editable={!loading} />
+          <TextInput style={styles.input} placeholder="Telefone" placeholderTextColor="#666" keyboardType="phone-pad" value={telefone} onChangeText={setTelefone} editable={!loading} />
           <TextInput style={styles.input} placeholder="Email" placeholderTextColor="#666" keyboardType="email-address" autoCapitalize="none" value={email} onChangeText={setEmail} editable={!loading} />
           <View style={styles.passwordContainer}>
             <TextInput style={styles.passwordInput} placeholder="Senha" placeholderTextColor="#666" secureTextEntry={!showPassword} value={password} onChangeText={setPassword} editable={!loading} />
@@ -43,7 +44,6 @@ export default function Card() {
               <Ionicons name={showPassword ? "eye-off" : "eye"} size={22} color="#666" />
             </TouchableOpacity>
           </View>
-          <TextInput style={styles.input} placeholder="Telefone" placeholderTextColor="#666" keyboardType="phone-pad" value={telefone} onChangeText={setTelefone} editable={!loading} />
           <TouchableOpacity style={[styles.button, loading && styles.buttonDisabled]} onPress={handleRegister} disabled={loading}>
             <Text style={styles.buttonText}>{loading ? "Cadastrando..." : "Cadastrar"}</Text>
           </TouchableOpacity>

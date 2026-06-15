@@ -7,7 +7,7 @@ export default function BotaoDenuncia() {
   return (
     <TouchableOpacity 
       style={styles.button}
-      onPress={() => router.push('/criar-post')}
+      onPress={() => router.push('/criar-denuncia')}
     >
       <Image
         source={require("@/assets/icons/denuncia.png")}
