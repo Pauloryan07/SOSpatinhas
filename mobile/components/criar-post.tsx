@@ -8,14 +8,16 @@ import {
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
-const API_URL = "https://sua-api.com";
+import api from "@/services/api";
+import { PostData } from "@/components/post-card";
 
 interface Props {
   visible: boolean;
   onClose: () => void;
+  onPostCreated?: (post: PostData) => void;
 }
 
-export default function CriarPostModal({ visible, onClose }: Props) {
+export default function CriarPostModal({ visible, onClose, onPostCreated }: Props) {
   const insets = useSafeAreaInsets();
   const [texto, setTexto] = useState("");
   const [imagem, setImagem] = useState<string | null>(null);
@@ -58,6 +60,12 @@ export default function CriarPostModal({ visible, onClose }: Props) {
   ).current;
 
   const handleClose = () => closeAnim(onClose);
+
+  function limparFormulario() {
+    setTexto("");
+    setImagem(null);
+    setImagemFile(null);
+  }
 
   async function escolherImagem() {
     const resultado = await ImagePicker.launchImageLibraryAsync({
@@ -105,12 +113,15 @@ export default function CriarPostModal({ visible, onClose }: Props) {
         const tipoArquivo = nomeArquivo?.endsWith(".png") ? "image/png" : "image/jpeg";
         formData.append("image", { uri: imagemFile.uri, name: nomeArquivo, type: tipoArquivo } as any);
       }
-      const resposta = await fetch(`${API_URL}/api/posts`, {
-        method: "POST",
-        headers: { Accept: "application/json" },
-        body: formData,
+
+      // usa a mesma instância do axios do resto do app, então o token de auth
+      // já vai automaticamente pelo interceptor de api.ts
+      const resposta = await api.post("/posts", formData, {
+        headers: { "Content-Type": "multipart/form-data" },
       });
-      if (!resposta.ok) throw new Error();
+
+      onPostCreated?.(resposta.data);
+      limparFormulario();
       Alert.alert("Sucesso!", "Post publicado!", [{ text: "OK", onPress: handleClose }]);
     } catch {
       Alert.alert("Erro", "Não foi possível publicar. Tente novamente.");
