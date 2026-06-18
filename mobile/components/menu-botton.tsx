@@ -25,10 +25,10 @@ const ITEMS = [
     size: 30,
   },
   {
-    key: "chat",
-    label: "Chat",
-    icon: require("@/assets/icons/chat.png"),
-    route: "/chat",
+    key: "post",
+    label: "Post",
+    icon: require("@/assets/icons/plus.svg"),
+    route: "/criar-post",
     size: 24,
   },
   {

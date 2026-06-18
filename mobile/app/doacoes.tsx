@@ -1,7 +1,7 @@
 import { View, Text, TouchableOpacity, Image, StyleSheet } from "react-native";
 import { useRouter } from "expo-router";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import MenuTop from "@/components/menu-top";
+import MenuTop from "@/components/menu-top-outher";
 import MenuBottom from "@/components/menu-botton";
 
 export default function Doacoes() {
