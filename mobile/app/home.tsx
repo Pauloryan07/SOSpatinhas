@@ -1,7 +1,7 @@
-import { StyleSheet, Text, View } from "react-native";
-import BotaoDenuncia from "../components/botao-denuncia";
-import MenuButtom from "../components/menu-botton";
-import MenuTop from "../components/menu-top";
+import { StyleSheet, View, Text } from "react-native";
+import BotaoDenuncia from "@/components/botao-denuncia";
+import MenuButtom from "@/components/menu-botton";
+import MenuTop from "@/components/menu-top";
 
 export default function HomeScreen() {
   return (
@@ -21,7 +21,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     backgroundColor: "#f5f5f5",
   },
-
   title: {
     fontSize: 24,
     fontWeight: "bold",

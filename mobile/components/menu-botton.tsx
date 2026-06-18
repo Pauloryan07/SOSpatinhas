@@ -1,6 +1,8 @@
 import { usePathname, useRouter } from "expo-router";
 import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { useState } from "react";
+import CriarPostModal from "@/components/criar-post";
 
 const ITEMS = [
   {
@@ -44,31 +46,47 @@ export default function MenuBotton() {
   const router = useRouter();
   const pathname = usePathname();
   const insets = useSafeAreaInsets();
+  const [postModalVisible, setPostModalVisible] = useState(false);
+
+  const handleItemPress = (item: (typeof ITEMS)[number]) => {
+    if (item.key === "post") {
+      setPostModalVisible(true);
+    } else {
+      router.push(item.route as any);
+    }
+  };
 
   return (
-    <View style={[styles.container, { paddingBottom: insets.bottom + 10 }]}>
-      {ITEMS.map((item) => {
-        const isActive = pathname === item.route;
+    <>
+      <CriarPostModal
+        visible={postModalVisible}
+        onClose={() => setPostModalVisible(false)}
+      />
 
-        return (
-          <TouchableOpacity
-            key={item.key}
-            style={styles.item}
-            onPress={() => router.push(item.route as any)}
-          >
-            <Image
-              source={item.icon}
-              style={[
-                { width: item.size, height: item.size },
-                { opacity: isActive ? 1 : 0.85 },
-              ]}
-              resizeMode="contain"
-            />
-            <Text style={styles.label}>{item.label}</Text>
-          </TouchableOpacity>
-        );
-      })}
-    </View>
+      <View style={[styles.container, { paddingBottom: insets.bottom + 10 }]}>
+        {ITEMS.map((item) => {
+          const isActive = pathname === item.route;
+
+          return (
+            <TouchableOpacity
+              key={item.key}
+              style={styles.item}
+              onPress={() => handleItemPress(item)}
+            >
+              <Image
+                source={item.icon}
+                style={[
+                  { width: item.size, height: item.size },
+                  { opacity: isActive ? 1 : 0.85 },
+                ]}
+                resizeMode="contain"
+              />
+              <Text style={styles.label}>{item.label}</Text>
+            </TouchableOpacity>
+          );
+        })}
+      </View>
+    </>
   );
 }
 
