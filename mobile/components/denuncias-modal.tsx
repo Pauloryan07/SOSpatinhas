@@ -1,6 +1,6 @@
 import * as ImagePicker from "expo-image-picker";
 import * as Location from "expo-location";
-import { ArrowLeft, Edit, Trash2, Plus, Image as ImageIcon, PawPrint, MapPin, Dog, Cat, Bird, HelpCircle } from "lucide-react-native";
+import { ArrowLeft, Edit, Trash2, Plus, PawPrint, MapPin, Dog, Cat, Bird, HelpCircle } from "lucide-react-native";
 import { useRef, useState } from "react";
 import {
   Alert,
@@ -22,7 +22,6 @@ import {
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
-import api from "@/services/api";
 import {
   Denunciation,
   DenunciationFormData,
@@ -31,7 +30,6 @@ import {
   updateDenunciation,
   deleteDenunciation,
   getCachedDenunciations,
-  getPersistedDenunciations,
 } from "@/services/denunciations";
 
 interface Props {

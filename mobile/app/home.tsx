@@ -11,11 +11,9 @@ import {
 } from "react-native";
 
 import api from "@/services/api";
-import { listDenunciations } from "@/services/denunciations";
 
 import BotaoDenuncia from "@/components/botao-denuncia";
 import CriarPostModal from "@/components/criar-post";
-import DenunciasModal from "@/components/denuncias-modal";
 import MenuButtom from "@/components/menu-botton";
 import MenuTop from "@/components/menu-top";
 import PostCard, { PostData } from "@/components/post-card";
@@ -34,7 +32,6 @@ export default function HomeScreen() {
   const [carregando, setCarregando] = useState(true);
   const [atualizando, setAtualizando] = useState(false);
   const [modalVisivel, setModalVisivel] = useState(false);
-  const [denunciasVisible, setDenunciasVisible] = useState(false);
   const [usuarioId, setUsuarioId] = useState<number | null>(null);
 
   async function carregarPosts() {
@@ -62,7 +59,6 @@ export default function HomeScreen() {
   useEffect(() => {
     carregarPosts();
     carregarUsuarioAtual();
-    listDenunciations(1).catch(() => {});
   }, []);
 
   function aoAtualizar() {
@@ -127,17 +123,13 @@ export default function HomeScreen() {
         />
       )}
 
-      <BotaoDenuncia onPress={() => setDenunciasVisible(true)} />
+      <BotaoDenuncia />
       <MenuButtom />
 
       <CriarPostModal
         visible={modalVisivel}
         onClose={() => setModalVisivel(false)}
         onPostCreated={aoCriarPost}
-      />
-      <DenunciasModal
-        visible={denunciasVisible}
-        onClose={() => setDenunciasVisible(false)}
       />
     </View>
   );

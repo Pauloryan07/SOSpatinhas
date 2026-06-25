@@ -1,9 +1,11 @@
 import { useRouter } from "expo-router";
-import { ArrowLeft } from "lucide-react-native";
+import { ArrowLeft, FileText } from "lucide-react-native";
 import { useEffect, useState } from "react";
 import {
   ActivityIndicator,
   FlatList,
+  RefreshControl,
+  ScrollView,
   StyleSheet,
   Text,
   TouchableOpacity,
@@ -37,6 +39,15 @@ const TIPO_LABELS: Record<string, string> = {
   other: "Outro",
 };
 
+const TIPO_CORES: Record<string, { background: string; text: string }> = {
+  abandonment: { background: "#FFF3E0", text: "#E65100" },
+  mistreatment: { background: "#FCE4EC", text: "#C62828" },
+  negligence: { background: "#F3E5F5", text: "#6A1B9A" },
+  injured: { background: "#E8F5E9", text: "#2E7D32" },
+  exploitation: { background: "#FFF8E1", text: "#F57F17" },
+  other: { background: "#F5F5F5", text: "#616161" },
+};
+
 const ESPECIE_LABELS: Record<string, string> = {
   dog: "Cachorro",
   cat: "Gato",
@@ -45,11 +56,24 @@ const ESPECIE_LABELS: Record<string, string> = {
   unknown: "Desconhecido",
 };
 
+const CONDICAO_LABELS: Record<string, string> = {
+  alive: "Vivo",
+  injured: "Ferido",
+  dead: "Morto",
+  unknown: "Desconhecido",
+};
+
+function formatarData(iso: string) {
+  const d = new Date(iso);
+  return d.toLocaleDateString("pt-BR", { day: "2-digit", month: "short", year: "numeric" });
+}
+
 export default function MinhasDenunciasScreen() {
   const insets = useSafeAreaInsets();
   const router = useRouter();
   const [denuncias, setDenuncias] = useState<Denuncia[]>([]);
   const [carregando, setCarregando] = useState(true);
+  const [atualizando, setAtualizando] = useState(false);
 
   useEffect(() => {
     carregarDenuncias();
@@ -63,13 +87,19 @@ export default function MinhasDenunciasScreen() {
       console.error(error);
     } finally {
       setCarregando(false);
+      setAtualizando(false);
     }
   }
 
+  function aoAtualizar() {
+    setAtualizando(true);
+    carregarDenuncias();
+  }
+
   function renderItem({ item }: { item: Denuncia }) {
-    const foto = item.evidences?.[0]?.photo_path 
-      ? `${process.env.EXPO_PUBLIC_API_URL}/storage/${item.evidences[0].photo_path}` 
-      : null;
+    const evidencias = item.evidences || [];
+    const temEvidencias = evidencias.length > 0;
+    const cores = TIPO_CORES[item.type] || TIPO_CORES.other;
 
     return (
       <View style={styles.card}>
@@ -80,28 +110,44 @@ export default function MinhasDenunciasScreen() {
                 {item.user.name.charAt(0).toUpperCase()}
               </Text>
             </View>
-            <View>
+            <View style={{ flex: 1 }}>
               <Text style={styles.userName}>{item.user.name}</Text>
-              <Text style={styles.tipoLabel}>
-                {TIPO_LABELS[item.type] || item.type}
-              </Text>
+              <View style={[styles.badgeTipo, { backgroundColor: cores.background }]}>
+                <Text style={[styles.badgeTipoTexto, { color: cores.text }]}>
+                  {TIPO_LABELS[item.type] || item.type}
+                </Text>
+              </View>
             </View>
+            <Text style={styles.dataTexto}>{formatarData(item.created_at)}</Text>
           </View>
         </View>
 
         <Text style={styles.descricao}>{item.description}</Text>
 
-        {foto && (
+        {temEvidencias && evidencias.length === 1 ? (
           <Image
-            source={{ uri: foto }}
-            style={styles.foto}
+            source={{ uri: `${process.env.EXPO_PUBLIC_API_URL}/storage/${evidencias[0].photo_path}` }}
+            style={styles.fotoGrande}
             resizeMode="cover"
           />
-        )}
+        ) : null}
+
+        {temEvidencias && evidencias.length > 1 ? (
+          <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.galeriaHorizontal}>
+            {evidencias.map((evidencia) => (
+              <Image
+                key={evidencia.id}
+                source={{ uri: `${process.env.EXPO_PUBLIC_API_URL}/storage/${evidencia.photo_path}` }}
+                style={styles.fotoPequena}
+                resizeMode="cover"
+              />
+            ))}
+          </ScrollView>
+        ) : null}
 
         <View style={styles.footerCard}>
           {item.address && (
-            <View style={styles.infoRow}>
+            <View style={[styles.infoRow, { flex: 1 }]}>
               <Text style={styles.infoIcon}>📍</Text>
               <Text style={styles.infoText} numberOfLines={1}>
                 {item.address}
@@ -111,7 +157,7 @@ export default function MinhasDenunciasScreen() {
           <View style={styles.infoRow}>
             <Text style={styles.infoIcon}>🐾</Text>
             <Text style={styles.infoText}>
-              {ESPECIE_LABELS[item.animal_species] || item.animal_species}
+              {ESPECIE_LABELS[item.animal_species] || item.animal_species} • {CONDICAO_LABELS[item.animal_condition] || item.animal_condition}
             </Text>
           </View>
         </View>
@@ -143,8 +189,12 @@ export default function MinhasDenunciasScreen() {
             renderItem={renderItem}
             contentContainerStyle={styles.listContent}
             showsVerticalScrollIndicator={false}
+            refreshControl={
+              <RefreshControl refreshing={atualizando} onRefresh={aoAtualizar} colors={["#F54E50"]} />
+            }
             ListEmptyComponent={
               <View style={styles.emptyContainer}>
+                <FileText size={48} color="#ddd" />
                 <Text style={styles.emptyText}>Você ainda não fez nenhuma denúncia.</Text>
               </View>
             }
@@ -192,6 +242,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     paddingTop: 100,
+    gap: 16,
   },
   emptyText: {
     fontSize: 14,
@@ -234,10 +285,20 @@ const styles = StyleSheet.create({
     fontWeight: "600",
     color: "#333",
   },
-  tipoLabel: {
-    fontSize: 13,
-    color: "#F54E50",
-    fontWeight: "500",
+  badgeTipo: {
+    paddingHorizontal: 10,
+    paddingVertical: 4,
+    borderRadius: 20,
+    alignSelf: "flex-start",
+    marginTop: 2,
+  },
+  badgeTipoTexto: {
+    fontSize: 12,
+    fontWeight: "600",
+  },
+  dataTexto: {
+    fontSize: 12,
+    color: "#aaa",
   },
   descricao: {
     fontSize: 14,
@@ -245,15 +306,26 @@ const styles = StyleSheet.create({
     lineHeight: 20,
     marginBottom: 12,
   },
-  foto: {
+  fotoGrande: {
     width: "100%",
     height: 200,
     borderRadius: 12,
     marginBottom: 12,
   },
+  galeriaHorizontal: {
+    marginBottom: 12,
+  },
+  fotoPequena: {
+    width: 88,
+    height: 88,
+    borderRadius: 12,
+    marginRight: 8,
+  },
   footerCard: {
     flexDirection: "row",
     gap: 16,
+    alignItems: "center",
+    flexWrap: "wrap",
   },
   infoRow: {
     flexDirection: "row",

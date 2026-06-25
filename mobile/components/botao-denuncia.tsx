@@ -1,13 +1,7 @@
-<<<<<<< HEAD
-import { Image, StyleSheet, TouchableOpacity } from "react-native";
 
-interface Props {
-  onPress: () => void;
-}
-=======
 import { useRouter } from "expo-router";
 import { Image, StyleSheet, TouchableOpacity, View, Animated, Text } from "react-native";
-import { Plus, Shield, FileText } from "lucide-react-native";
+import { Shield, FileText } from "lucide-react-native";
 import { useState, useRef } from "react";
 
 export default function BotaoDenuncia() {
@@ -24,122 +18,41 @@ export default function BotaoDenuncia() {
 
     if (novoAberto) {
       Animated.parallel([
-        Animated.timing(translateY1, {
-          toValue: -140,
-          duration: 300,
-          useNativeDriver: true,
-        }),
-        Animated.timing(translateY2, {
-          toValue: -80,
-          duration: 300,
-          useNativeDriver: true,
-        }),
-        Animated.timing(opacity1, {
-          toValue: 1,
-          duration: 250,
-          useNativeDriver: true,
-        }),
-        Animated.timing(opacity2, {
-          toValue: 1,
-          duration: 250,
-          useNativeDriver: true,
-        }),
+        Animated.timing(translateY1, { toValue: -140, duration: 300, useNativeDriver: true }),
+        Animated.timing(translateY2, { toValue: -80, duration: 300, useNativeDriver: true }),
+        Animated.timing(opacity1, { toValue: 1, duration: 250, useNativeDriver: true }),
+        Animated.timing(opacity2, { toValue: 1, duration: 250, useNativeDriver: true }),
       ]).start();
     } else {
       Animated.parallel([
-        Animated.timing(translateY1, {
-          toValue: 0,
-          duration: 300,
-          useNativeDriver: true,
-        }),
-        Animated.timing(translateY2, {
-          toValue: 0,
-          duration: 300,
-          useNativeDriver: true,
-        }),
-        Animated.timing(opacity1, {
-          toValue: 0,
-          duration: 200,
-          useNativeDriver: true,
-        }),
-        Animated.timing(opacity2, {
-          toValue: 0,
-          duration: 200,
-          useNativeDriver: true,
-        }),
+        Animated.timing(translateY1, { toValue: 0, duration: 300, useNativeDriver: true }),
+        Animated.timing(translateY2, { toValue: 0, duration: 300, useNativeDriver: true }),
+        Animated.timing(opacity1, { toValue: 0, duration: 200, useNativeDriver: true }),
+        Animated.timing(opacity2, { toValue: 0, duration: 200, useNativeDriver: true }),
       ]).start();
     }
   }
->>>>>>> 4ee70aaf3d9647a8de6182d31a1ce5b102c33a17
 
-export default function BotaoDenuncia({ onPress }: Props) {
   return (
-<<<<<<< HEAD
-    <TouchableOpacity 
-      style={styles.button}
-      onPress={onPress}
-    >
-      <Image
-        source={require("@/assets/icons/denuncia.png")}
-        style={styles.icon}
-        resizeMode="contain"
-      />
-    </TouchableOpacity>
-=======
     <View style={styles.container}>
-      {/* Botão "Minhas Denúncias" (mais acima) */}
-      <Animated.View style={[
-        styles.fabMini,
-        {
-          transform: [{ translateY: translateY1 }],
-          opacity: opacity1,
-        }
-      ]}>
+      <Animated.View style={[styles.fabMini, { transform: [{ translateY: translateY1 }], opacity: opacity1 }]}>
         <Text style={styles.fabLabel}>Minhas denúncias</Text>
-        <TouchableOpacity 
-          style={styles.fabMiniButton}
-          onPress={() => {
-            toggle();
-            router.push("/minhas-denuncias");
-          }}
-        >
+        <TouchableOpacity style={styles.fabMiniButton} onPress={() => { toggle(); router.push("/minhas-denuncias"); }}>
           <FileText size={20} color="#fff" />
         </TouchableOpacity>
       </Animated.View>
 
-      {/* Botão "Denunciar" (abaixo do primeiro) */}
-      <Animated.View style={[
-        styles.fabMini,
-        {
-          transform: [{ translateY: translateY2 }],
-          opacity: opacity2,
-        }
-      ]}>
+      <Animated.View style={[styles.fabMini, { transform: [{ translateY: translateY2 }], opacity: opacity2 }]}>
         <Text style={styles.fabLabel}>Denunciar</Text>
-        <TouchableOpacity 
-          style={styles.fabMiniButton}
-          onPress={() => {
-            toggle();
-            router.push("/criar-denuncia");
-          }}
-        >
+        <TouchableOpacity style={styles.fabMiniButton} onPress={() => { toggle(); router.push("/criar-denuncia"); }}>
           <Shield size={20} color="#fff" />
         </TouchableOpacity>
       </Animated.View>
 
-      {/* Botão principal */}
-      <TouchableOpacity 
-        style={styles.button}
-        onPress={toggle}
-      >
-        <Image
-          source={require("@/assets/icons/denuncia.png")}
-          style={styles.icon}
-          resizeMode="contain"
-        />
+      <TouchableOpacity style={styles.button} onPress={toggle}>
+        <Image source={require("@/assets/icons/denuncia.png")} style={styles.icon} resizeMode="contain" />
       </TouchableOpacity>
     </View>
->>>>>>> 4ee70aaf3d9647a8de6182d31a1ce5b102c33a17
   );
 }
 

@@ -4,14 +4,6 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 let cachedFirstPage: any = null;
 const CACHE_KEY = "denunciations_cache_v1";
 
-async function persistCache(data: any) {
-  try {
-    await AsyncStorage.setItem(CACHE_KEY, JSON.stringify(data));
-  } catch {
-    // Silencioso
-  }
-}
-
 export async function getPersistedDenunciations(): Promise<any | null> {
   try {
     const data = await AsyncStorage.getItem(CACHE_KEY);

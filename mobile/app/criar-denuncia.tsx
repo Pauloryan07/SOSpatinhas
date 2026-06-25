@@ -65,7 +65,7 @@ export default function CriarDenunciaScreen() {
   const insets = useSafeAreaInsets();
   const router = useRouter();
 
-  const [etapa, setEtapa] = useState<1 | 2>(2); // Start directly at form
+  const [etapa, setEtapa] = useState<1 | 2>(1); // Start at type selection
   const [tipo, setTipo] = useState("other"); // Default to "Outro"
   const [endereco, setEndereco] = useState("");
   const [latitude, setLatitude] = useState<number | null>(null);
@@ -244,14 +244,7 @@ export default function CriarDenunciaScreen() {
   return (
     <KeyboardAvoidingView style={s.flex} behavior={Platform.OS === "ios" ? "padding" : undefined}>
       <View style={[s.header2, { paddingTop: insets.top + 12 }]}>
-<<<<<<< HEAD
         <TouchableOpacity onPress={() => router.back()}>
-=======
-        <TouchableOpacity 
-          onPress={() => setEtapa(1)} 
-          hitSlop={{ top: 20, bottom: 20, left: 20, right: 20 }}
-        >
->>>>>>> 4ee70aaf3d9647a8de6182d31a1ce5b102c33a17
           <ArrowLeft size={22} color="#fff" strokeWidth={2} />
         </TouchableOpacity>
         <View style={{ flex: 1, marginLeft: 12 }}>
