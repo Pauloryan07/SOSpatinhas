@@ -1,6 +1,9 @@
 {
-  "plugins": [
-    "expo-font",
-    "expo-router"
-  ]
+  "expo": {
+    "newArchEnabled": false,
+    "plugins": [
+      "expo-font",
+      "expo-router"
+    ]
+  }
 }

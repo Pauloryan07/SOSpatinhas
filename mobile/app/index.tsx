@@ -1,8 +1,8 @@
 import { useEffect, useRef } from "react";
-import { Animated, Easing, StyleSheet, View } from "react-native";
-import { Image } from "expo-image";
+import { Animated, Easing, StyleSheet, View, Text } from "react-native";
 import { useRouter } from "expo-router";
 import Svg, { Path } from "react-native-svg";
+import LogoSvg from "@/assets/svgs/logo-1.svg";
 
 function PawPrint({
   size = 24,
@@ -229,11 +229,7 @@ export default function SplashScreen() {
           },
         ]}
       >
-        <Image
-          style={styles.logo}
-          source={require("@/assets/svgs/logo-1.svg")}
-          contentFit="contain"
-        />
+        <LogoSvg width={220} height={174} />
       </Animated.View>
 
       <Animated.View
@@ -256,10 +252,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     marginBottom: 60,
-  },
-  logo: {
-    width: 220,
-    height: 174,
   },
   loaderSection: {
     position: "absolute",

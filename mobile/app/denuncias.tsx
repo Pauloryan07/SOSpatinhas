@@ -1,5 +1,5 @@
 import { useRouter } from "expo-router";
-import { ArrowLeft } from "lucide-react-native";
+import { ArrowLeft, Plus } from "lucide-react-native";
 import { useEffect, useState } from "react";
 import {
   ActivityIndicator,
@@ -127,7 +127,9 @@ export default function DenunciasScreen() {
             <ArrowLeft size={22} color="#FFF" strokeWidth={2} />
           </TouchableOpacity>
           <Text style={styles.headerTitle}>Denúncias</Text>
-          <View style={{ width: 22 }} />
+          <TouchableOpacity onPress={() => router.push('/criar-denuncia')} style={styles.novaDenunciaBtn}>
+            <Plus size={20} color="#F54E50" strokeWidth={2.5} />
+          </TouchableOpacity>
         </View>
       </View>
 
@@ -163,6 +165,14 @@ const styles = StyleSheet.create({
   headerTop: {
     flexDirection: "row",
     justifyContent: "space-between",
+    alignItems: "center",
+  },
+  novaDenunciaBtn: {
+    width: 34,
+    height: 34,
+    borderRadius: 17,
+    backgroundColor: "#fff",
+    justifyContent: "center",
     alignItems: "center",
   },
   headerTitle: {

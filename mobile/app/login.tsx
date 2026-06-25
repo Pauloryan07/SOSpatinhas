@@ -1,6 +1,7 @@
 import CriarConta from "@/components/login/botao-criar";
 import Card from "@/components/login/card";
 import { Image, StyleSheet, View } from "react-native";
+import Logo from "@/assets/svgs/Logo_SOSPatinhas.svg";
 
 export default function LoginScreen() {
   return (
@@ -10,10 +11,7 @@ export default function LoginScreen() {
         source={require("@/assets/images/textura-login.png")}
       />
       <CriarConta />
-      <Image
-        style={styles.image}
-        source={require("@/assets/images/Logo_SOSPatinhas.png")}
-      />
+      <Logo width={240} height={240} />
       <Card />
     </View>
   );
@@ -25,12 +23,6 @@ const styles = StyleSheet.create({
     backgroundColor: "#F54E50",
     justifyContent: "center",
     alignItems: "center",
-  },
-  image: {
-    marginTop: 70,
-    marginBottom: 30,
-    width: 220,
-    height: 60,
   },
   textura: {
     width: "100%",

@@ -7,6 +7,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class DenunciationEvidence extends Model
 {
+    protected $table = 'denunciation_evidences';
+
     protected $fillable = [
         'denunciation_id',
         'photo_path',

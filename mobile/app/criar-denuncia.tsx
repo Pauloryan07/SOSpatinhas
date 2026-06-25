@@ -65,8 +65,8 @@ export default function CriarDenunciaScreen() {
   const insets = useSafeAreaInsets();
   const router = useRouter();
 
-  const [etapa, setEtapa] = useState<1 | 2>(1);
-  const [tipo, setTipo] = useState("");
+  const [etapa, setEtapa] = useState<1 | 2>(2); // Start directly at form
+  const [tipo, setTipo] = useState("other"); // Default to "Outro"
   const [endereco, setEndereco] = useState("");
   const [latitude, setLatitude] = useState<number | null>(null);
   const [longitude, setLongitude] = useState<number | null>(null);
@@ -220,12 +220,11 @@ export default function CriarDenunciaScreen() {
   return (
     <KeyboardAvoidingView style={s.flex} behavior={Platform.OS === "ios" ? "padding" : undefined}>
       <View style={[s.header2, { paddingTop: insets.top + 12 }]}>
-        <TouchableOpacity onPress={() => setEtapa(1)}>
+        <TouchableOpacity onPress={() => router.back()}>
           <ArrowLeft size={22} color="#fff" strokeWidth={2} />
         </TouchableOpacity>
         <View style={{ flex: 1, marginLeft: 12 }}>
           <Text style={s.header2Titulo}>Denúncia</Text>
-          <Text style={s.header2Sub}>{tipoSelecionado?.label}</Text>
         </View>
       </View>
 
@@ -327,6 +326,47 @@ export default function CriarDenunciaScreen() {
 
 const s = StyleSheet.create({
   flex: { flex: 1, backgroundColor: "#fff" },
+
+  tipoGrid: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    gap: 12,
+    justifyContent: "space-between",
+  },
+  tipoCard: {
+    width: "48%",
+    backgroundColor: "#FFF0F0",
+    borderRadius: 16,
+    padding: 12,
+    alignItems: "center",
+    gap: 8,
+    borderWidth: 1.5,
+    borderColor: "#FFF0F0",
+  },
+  tipoCardAtivo: {
+    backgroundColor: "#F54E50",
+    borderColor: "#F54E50",
+  },
+  tipoIconCircle: {
+    width: 48,
+    height: 48,
+    borderRadius: 24,
+    backgroundColor: "#fff",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  tipoIconCircleAtivo: {
+    backgroundColor: "rgba(255,255,255,0.25)",
+  },
+  tipoLabel: {
+    fontSize: 12,
+    fontWeight: "600",
+    color: "#F54E50",
+    textAlign: "center",
+  },
+  tipoLabelAtivo: {
+    color: "#fff",
+  },
 
   gridWrapper: {
     flex: 1,

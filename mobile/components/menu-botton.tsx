@@ -3,6 +3,7 @@ import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useState } from "react";
 import CriarPostModal from "@/components/criar-post";
+import { Plus } from "lucide-react-native";
 
 const ITEMS = [
   {
@@ -73,14 +74,22 @@ export default function MenuBotton() {
               style={styles.item}
               onPress={() => handleItemPress(item)}
             >
-              <Image
-                source={item.icon}
-                style={[
-                  { width: item.size, height: item.size },
-                  { opacity: isActive ? 1 : 0.85 },
-                ]}
-                resizeMode="contain"
-              />
+              {item.key === "post" ? (
+                <Plus
+                  size={item.size}
+                  color="#fff"
+                  strokeWidth={2.2}
+                />
+              ) : (
+                <Image
+                  source={item.icon}
+                  style={[
+                    { width: item.size, height: item.size },
+                    { opacity: isActive ? 1 : 0.85 },
+                  ]}
+                  resizeMode="contain"
+                />
+              )}
               <Text style={styles.label}>{item.label}</Text>
             </TouchableOpacity>
           );

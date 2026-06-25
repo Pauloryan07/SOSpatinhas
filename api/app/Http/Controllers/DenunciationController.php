@@ -7,9 +7,10 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 class DenunciationController extends Controller
 {
-    public function index(): JsonResponse
+    public function index(Request $request): JsonResponse
     {
-        $denunciations = Denunciation::with(['user:id,name', 'evidences'])
+        $denunciations = $request->user()->denunciations()
+            ->with('evidences:id,denunciation_id,photo_path')
             ->latest()
             ->paginate(15);
         return response()->json($denunciations);

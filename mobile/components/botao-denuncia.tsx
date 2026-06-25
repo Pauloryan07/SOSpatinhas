@@ -1,13 +1,14 @@
-import { useRouter } from "expo-router";
 import { Image, StyleSheet, TouchableOpacity } from "react-native";
 
-export default function BotaoDenuncia() {
-  const router = useRouter();
+interface Props {
+  onPress: () => void;
+}
 
+export default function BotaoDenuncia({ onPress }: Props) {
   return (
     <TouchableOpacity 
       style={styles.button}
-      onPress={() => router.push('/criar-denuncia')}
+      onPress={onPress}
     >
       <Image
         source={require("@/assets/icons/denuncia.png")}
