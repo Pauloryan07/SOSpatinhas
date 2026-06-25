@@ -104,8 +104,8 @@ class PostController extends Controller
         if ($post->user_id !== $request->user()->id) {
             return response()->json(['message' => 'Não autorizado.'], 403);
         }
-        if ($post->image) {
-            Storage::disk('supabase')->delete($post->image);
+        if ($post->image_path) {
+            Storage::disk('supabase')->delete($post->image_path);
         }
 
         $post->delete();

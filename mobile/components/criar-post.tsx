@@ -114,17 +114,18 @@ export default function CriarPostModal({ visible, onClose, onPostCreated }: Prop
         formData.append("image", { uri: imagemFile.uri, name: nomeArquivo, type: tipoArquivo } as any);
       }
 
-      // usa a mesma instância do axios do resto do app, então o token de auth
-      // já vai automaticamente pelo interceptor de api.ts
-      const resposta = await api.post("/posts", formData, {
-        headers: { "Content-Type": "multipart/form-data" },
-      });
+      console.log("Enviando post...", formData);
+      
+      const resposta = await api.post("/posts", formData);
 
+      console.log("Resposta do servidor:", resposta.data);
+      
       onPostCreated?.(resposta.data);
       limparFormulario();
       Alert.alert("Sucesso!", "Post publicado!", [{ text: "OK", onPress: handleClose }]);
-    } catch {
-      Alert.alert("Erro", "Não foi possível publicar. Tente novamente.");
+    } catch (error: any) {
+      console.error("Erro ao publicar:", error.response?.data || error.message || error);
+      Alert.alert("Erro", error.response?.data?.message || "Não foi possível publicar. Tente novamente.");
     } finally {
       setCarregando(false);
     }

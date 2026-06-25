@@ -15,6 +15,14 @@ class DenunciationController extends Controller
         return response()->json($denunciations);
     }
 
+    public function myDenunciations(Request $request): JsonResponse
+    {
+        $denunciations = $request->user()->denunciations()->with(['user:id,name', 'evidences'])
+            ->latest()
+            ->paginate(15);
+        return response()->json($denunciations);
+    }
+
     public function store(StoreDenunciationRequest $request): JsonResponse
     {
         $validated = $request->validated();

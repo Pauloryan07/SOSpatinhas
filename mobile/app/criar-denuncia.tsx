@@ -72,8 +72,8 @@ export default function CriarDenunciaScreen() {
   const [longitude, setLongitude] = useState<number | null>(null);
   const [localizandoGps, setLocalizandoGps] = useState(false);
   const [descricao, setDescricao] = useState("");
-  const [especie, setEspecie] = useState("unknown");
-  const [condicao, setCondicao] = useState("unknown");
+  const [especie, setEspecie] = useState<string>("unknown");
+  const [condicao, setCondicao] = useState<string>("unknown");
   const [fotos, setFotos] = useState<ImagePicker.ImagePickerAsset[]>([]);
   const [carregando, setCarregando] = useState(false);
 
@@ -145,14 +145,25 @@ export default function CriarDenunciaScreen() {
           type: nome.endsWith(".png") ? "image/png" : "image/jpeg",
         } as any);
       });
-      await api.post("/denunciations", formData, {
+      
+      console.log("Enviando denúncia:", formData);
+      
+      const resposta = await api.post("/denunciations", formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
+      
+      console.log("Resposta da denúncia:", resposta.data);
+      
       Alert.alert("Denúncia enviada!", "Obrigado por ajudar um animal.", [
         { text: "OK", onPress: () => router.back() },
       ]);
-    } catch {
-      Alert.alert("Erro", "Não foi possível enviar. Tente novamente.");
+    } catch (error: any) {
+      console.error("Erro ao enviar denúncia:", error.response?.data || error.message || error);
+      Alert.alert(
+        "Erro", 
+        error.response?.data?.message || 
+        (error.response?.data ? JSON.stringify(error.response.data) : "Não foi possível enviar. Tente novamente.")
+      );
     } finally {
       setCarregando(false);
     }
@@ -165,7 +176,14 @@ export default function CriarDenunciaScreen() {
     return (
       <View style={[s.flex, { backgroundColor: PRIMARY }]}>
         <View style={{ paddingTop: insets.top + 16, paddingHorizontal: 24, alignItems: "center", paddingBottom: 24 }}>
-          <TouchableOpacity onPress={() => router.back()} style={{ alignSelf: "flex-start", marginBottom: 24 }}>
+          <TouchableOpacity 
+            onPress={() => {
+              console.log("Voltando para home...");
+              router.replace('/home');
+            }} 
+            style={{ alignSelf: "flex-start", marginBottom: 24, zIndex: 10 }}
+            hitSlop={{ top: 20, bottom: 20, left: 20, right: 20 }}
+          >
             <ArrowLeft size={22} color="#fff" strokeWidth={2} />
           </TouchableOpacity>
           <Text style={{ color: "#fff", fontSize: 36, fontWeight: "900", letterSpacing: 2, marginBottom: 6 }}>DENÚNCIA</Text>
@@ -202,7 +220,13 @@ export default function CriarDenunciaScreen() {
         </View>
 
         <View style={[s.etapa1Footer, { paddingBottom: insets.bottom + 20 }]}>
-          <TouchableOpacity onPress={() => router.back()}>
+          <TouchableOpacity 
+            onPress={() => {
+              console.log("Cancelar, voltando para home...");
+              router.replace('/home');
+            }} 
+            hitSlop={{ top: 20, bottom: 20, left: 20, right: 20 }}
+          >
             <Text style={s.cancelarTexto}>Cancelar</Text>
           </TouchableOpacity>
           {tipo ? (
@@ -220,7 +244,10 @@ export default function CriarDenunciaScreen() {
   return (
     <KeyboardAvoidingView style={s.flex} behavior={Platform.OS === "ios" ? "padding" : undefined}>
       <View style={[s.header2, { paddingTop: insets.top + 12 }]}>
-        <TouchableOpacity onPress={() => setEtapa(1)}>
+        <TouchableOpacity 
+          onPress={() => setEtapa(1)} 
+          hitSlop={{ top: 20, bottom: 20, left: 20, right: 20 }}
+        >
           <ArrowLeft size={22} color="#fff" strokeWidth={2} />
         </TouchableOpacity>
         <View style={{ flex: 1, marginLeft: 12 }}>

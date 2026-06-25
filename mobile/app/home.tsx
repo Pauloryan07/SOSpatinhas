@@ -50,8 +50,7 @@ export default function HomeScreen() {
 
   async function carregarUsuarioAtual() {
     try {
-      // ajuste a rota se o seu UserController.profile() não estiver em /profile
-      const resposta = await api.get("/profile");
+      const resposta = await api.get("/user/profile");
       setUsuarioId(resposta.data.id);
     } catch {
       // sem o id ainda dá pra usar o app, só a aba "Minhas postagens" fica vazia
@@ -118,7 +117,7 @@ export default function HomeScreen() {
             <Text style={styles.vazio}>
               {aba === "seguindo"
                 ? "Em breve: posts de quem você segue."
-                : "Nenhuma postagem por aqui ainda."}
+                : "Ainda não há post"}
             </Text>
           }
           contentContainerStyle={{ flexGrow: 1, paddingBottom: 90 }}

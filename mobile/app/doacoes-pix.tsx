@@ -4,35 +4,53 @@ import {
   StyleSheet,
   Image,
   TouchableOpacity,
+  Alert,
 } from "react-native";
 import { useRouter } from "expo-router";
+import * as Clipboard from "expo-clipboard";
 
 import MenuTopOuther from "@/components/menu-top-outher";
 import MenuBotton from "@/components/menu-botton";
 
 export default function DoacoesPix() {
   const router = useRouter();
+  const numeroConta = "000-000-000-00";
+
+  async function copiarNumero() {
+    await Clipboard.setStringAsync(numeroConta);
+
+    Alert.alert(
+      "Copiado!",
+      `Número ${numeroConta} copiado para a área de transferência!`
+    );
+  }
 
   return (
     <View style={styles.container}>
       <MenuTopOuther />
 
+      <View style={styles.banner}>
+        <Image
+          source={require("@/assets/images/textura-dinheiro.png")}
+          style={styles.texture}
+          resizeMode="cover"
+        />
+        <Image
+          source={require("@/assets/images/cat-doacoes.png")}
+          style={styles.catImage}
+          resizeMode="contain"
+        />
+      </View>
+
       <View style={styles.content}>
-        <View style={styles.imageContainer}>
-          <Image
-            source={require("@/assets/images/cat-doacoes.png")}
-            style={styles.catImage}
-            resizeMode="contain"
-          />
+        <View style={styles.titleContainer}>
+          <Text style={styles.title}>Doe com dinheiro</Text>
+          <View style={styles.underline} />
         </View>
 
-        <Text style={styles.title}>Doe com dinheiro</Text>
-
-        <View style={styles.line} />
-
-        <TouchableOpacity style={styles.button}>
+        <TouchableOpacity style={styles.button} onPress={copiarNumero}>
           <Text style={styles.buttonText}>
-            000-000-000-00
+            {numeroConta}
           </Text>
         </TouchableOpacity>
 
@@ -54,40 +72,56 @@ export default function DoacoesPix() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#ECECEC",
+    backgroundColor: "#fff",
   },
 
-  content: {
-    flex: 1,
-    paddingTop: 140,
-    paddingHorizontal: 20,
-    alignItems: "center",
-  },
-
-  imageContainer: {
-    width: "100%",
+  banner: {
     backgroundColor: "#F54E50",
-    borderRadius: 30,
+    height: 320,
+    borderBottomLeftRadius: 32,
+    borderBottomRightRadius: 32,
+    overflow: "hidden",
     alignItems: "center",
-    paddingVertical: 20,
+    justifyContent: "center",
+    marginTop: 120,
+  },
+
+  texture: {
+    position: "absolute",
+    width: "100%",
+    height: "100%",
+    opacity: 0.4,
   },
 
   catImage: {
-    width: 250,
-    height: 250,
+    width: "110%",
+    height: "110%",
+    position: "absolute",
+    bottom: -30,
+  },
+
+  content: {
+    paddingHorizontal: 32,
+  },
+
+  titleContainer: {
+    alignItems: "center",
+    marginTop: 28,
+    marginBottom: 20,
   },
 
   title: {
-    fontSize: 22,
-    fontWeight: "bold",
-    marginTop: 20,
+    fontSize: 24,
+    fontWeight: "900",
+    color: "#111",
   },
 
-  line: {
-    width: 90,
-    height: 2,
+  underline: {
+    width: 80,
+    height: 4,
     backgroundColor: "#F54E50",
-    marginVertical: 10,
+    borderRadius: 2,
+    marginTop: 6,
   },
 
   button: {
