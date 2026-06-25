@@ -17,6 +17,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/me', [AuthController::class, 'me']);
     Route::apiResource('/posts', PostController::class);
     Route::apiResource('denunciations', DenunciationController::class);
+    Route::get('/my-denunciations', [DenunciationController::class, 'myDenunciations']);
     Route::get('/user/profile', [UserController::class, 'profile']);
     Route::put('/user/profile', [UserController::class, 'updateProfile']);
     Route::put('/user/password', [UserController::class, 'updatePassword']);
